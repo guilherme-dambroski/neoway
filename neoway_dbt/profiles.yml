@@ -1,0 +1,14 @@
+neoway_dbt:
+  outputs:
+    dev:
+      type: duckdb
+      path: dev.duckdb
+      schema: main
+      threads: 16
+
+    prod:
+      type: duckdb
+      path: prod.duckdb
+      schema: main
+      threads: 16
+  target: dev

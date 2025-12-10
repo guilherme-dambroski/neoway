@@ -1,0 +1,14 @@
+neoway_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: /opt/airflow/dbt/dev.duckdb
+      schema: main
+      threads: 16
+
+    prod:
+      type: duckdb
+      path: /opt/airflow/dbt/prod.duckdb
+      schema: main
+      threads: 16

@@ -1,0 +1,95 @@
+version: 2
+
+models:
+  - name: bz_cotacoes_bolsa
+    description: "Espelho bruto do seed cotacoes_bolsa.csv."
+    columns:
+      - name: id
+      - name: tp_reg
+      - name: dt_pregao
+      - name: cd_bdi
+      - name: cd_acao
+      - name: tp_merc
+      - name: nm_empresa_rdz
+      - name: especi
+      - name: prazo
+      - name: moeda_ref
+      - name: vl_abertura
+      - name: vl_maximo
+      - name: vl_minimo
+      - name: vl_medio
+      - name: vl_fechamento
+      - name: vl_mlh_oft_compra
+      - name: vl_mlh_oft_venda
+      - name: vl_ttl_neg
+      - name: qt_tit_neg
+      - name: vl_volume
+      - name: vl_exec_opc
+      - name: in_opc
+      - name: dt_vnct_opc
+      - name: ft_cotacao
+      - name: vl_exec_moeda_corrente
+      - name: cd_isin
+      - name: cd_acao_rdz
+      - name: created_at
+      - name: updated_at
+      - name: __index_level_0__
+
+  - name: bz_df_empresas
+    description: "Espelho bruto do seed df_empresas.csv."
+    columns:
+      - name: cnpj
+      - name: dt_abertura
+      - name: matriz_empresaMatriz
+      - name: cd_cnae_principal
+      - name: de_cnae_principal
+      - name: de_ramo_atividade
+      - name: de_setor
+      - name: endereco_cep
+      - name: endereco_municipio
+      - name: endereco_uf
+      - name: endereco_regiao
+      - name: endereco_mesorregiao
+      - name: situacao_cadastral
+
+  - name: bz_empresas_bolsa
+    description: "Espelho bruto do seed empresas_bolsa.csv."
+    columns:
+      - name: id
+      - name: cd_acao_rdz
+      - name: nm_empresa
+      - name: setor_economico
+      - name: subsetor
+      - name: segmento
+      - name: segmento_b3
+      - name: nm_segmento_b3
+      - name: cd_acao
+      - name: tx_cnpj
+      - name: vl_cnpj
+      - name: created_at
+      - name: updated_at
+
+  - name: bz_empresas_nivel_atividade
+    description: "Espelho bruto do seed empresas_nivel_atividade.csv."
+    columns:
+      - name: cnpj
+      - name: nivel_atividade
+
+  - name: bz_empresas_porte
+    description: "Espelho bruto do seed empresas_porte.csv."
+    columns:
+      - name: cnpj
+      - name: empresa_porte
+
+  - name: bz_empresas_saude_tributaria
+    description: "Espelho bruto do seed empresas_saude_tributaria.csv."
+    columns:
+      - name: cnpj
+      - name: saude_tributaria
+
+  - name: bz_empresas_simples
+    description: "Espelho bruto do seed empresas_simples.csv."
+    columns:
+      - name: cnpj
+      - name: optante_simples
+      - name: optante_simei

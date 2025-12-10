@@ -1,0 +1,84 @@
+version: '3'
+x-airflow-common: &airflow-common
+  build:
+    context: ../
+    dockerfile: ./neoway_airflow/Dockerfile
+  environment: &airflow-common-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW_UID: 50000
+    # DBT Configuration
+    DBT_PROFILES_DIR: /opt/airflow/dbt
+    DBT_PROJECT_DIR: /opt/airflow/dbt
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./plugins:/opt/airflow/plugins
+    # Mount the dbt project
+    - ../neoway_dbt:/opt/airflow/dbt
+    # Mount the profiles.yml (we will create this file in the neoway_airflow dir to inject it into the container)
+    - ./profiles.yml:/opt/airflow/dbt/profiles.yml
+  user: "${AIRFLOW_UID}:0"
+  depends_on: &airflow-common-depends-on
+    postgres:
+      condition: service_healthy
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "airflow" ]
+      interval: 5s
+      retries: 5
+    restart: always
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://localhost:8080/health" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    healthcheck:
+      test: [ "CMD-SHELL", 'airflow jobs check --job-type SchedulerJob --hostname "$${HOSTNAME}"' ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  airflow-init:
+    <<: *airflow-common
+    command: version
+    environment:
+      <<: *airflow-common-env
+      _AIRFLOW_DB_UPGRADE: 'true'
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+      _AIRFLOW_WWW_USER_USERNAME: 'admin'
+      _AIRFLOW_WWW_USER_PASSWORD: 'admin'
+    user: "0:0"
+    volumes:
+      - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
+      - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
+      - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
+      - ${AIRFLOW_PROJ_DIR:-.}/../neoway_dbt:/opt/airflow/dbt
+
+volumes:
+  postgres-db-volume:

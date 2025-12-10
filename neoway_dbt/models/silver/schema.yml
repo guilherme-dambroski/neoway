@@ -1,0 +1,151 @@
+version: 2
+
+models:
+  - name: sv_cotacoes_bolsa
+    description: "Cotações tratadas, tipadas e normalizadas a partir de bz_cotacoes_bolsa."
+    columns:
+      - name: dt_pregao
+        description: "Data da sessão de negociação."
+        tests: [not_null]
+      - name: cd_acao_rdz
+        description: "Ticker ou código de negociação do ativo (ex: PETR4)."
+        tests: [not_null]
+      - name: cd_isin
+        description: "Código ISIN do papel."
+      - name: nm_empresa_rdz
+        description: "Nome reduzido da empresa negociada."
+      - name: cd_acao
+        description: "Código completo de negociação."
+      - name: cd_bdi
+        description: "Código BDI do papel."
+      - name: tp_merc
+        description: "Tipo de mercado da negociação."
+      - name: especi
+        description: "Especificação do papel."
+      - name: vl_abertura
+        description: "Preço de abertura tipado DOUBLE."
+      - name: vl_maximo
+        description: "Preço máximo do pregão tipado DOUBLE."
+      - name: vl_minimo
+        description: "Preço mínimo do pregão tipado DOUBLE."
+      - name: vl_medio
+        description: "Preço médio negociado tipado DOUBLE."
+      - name: vl_fechamento
+        description: "Preço de fechamento tipado DOUBLE."
+      - name: vl_volume
+        description: "Volume financeiro negociado tipado DOUBLE."
+      - name: vl_total
+        description: "Valor total negociado no dia tipado DOUBLE."
+      - name: qt_tit_neg
+        description: "Quantidade de títulos negociados tipada BIGINT."
+      - name: nr_negocios
+        description: "Número total de negócios realizados tipado INT."
+      - name: vl_mlh_oft_compra
+        description: "Melhor oferta de compra tipada DOUBLE quando existir."
+      - name: vl_mlh_oft_venda
+        description: "Melhor oferta de venda tipada DOUBLE quando existir."
+      - name: ind_opcao
+        description: "Indicador de opção normalizado."
+      - name: dt_vencimento_opcao
+        description: "Data de vencimento da opção convertida para DATE."
+      - name: vl_execucao_opcao
+        description: "Valor de exercício da opção tipado DOUBLE."
+      - name: fator_cotacao
+        description: "Fator de cotação como inteiro."
+      - name: vl_exec_moeda_corrente
+        description: "Valor de exercício na moeda corrente tipado DOUBLE."
+
+  - name: sv_empresas_bolsa
+    description: "Empresas listadas em bolsa com CNPJ padronizado e metadados estruturados."
+    columns:
+      - name: cd_acao_rdz
+        description: "Código reduzido da ação em minúsculas."
+        tests: [not_null]
+      - name: cd_acao
+        description: "Código completo de negociação do papel."
+      - name: nm_empresa
+        description: "Nome oficial da empresa."
+      - name: setor_economico
+        description: "Setor econômico da empresa."
+      - name: subsetor
+        description: "Subsetor da empresa."
+      - name: segmento
+        description: "Segmento da empresa."
+      - name: segmento_b3
+        description: "Segmento conforme classificação B3."
+      - name: nm_segmento_b3
+        description: "Nome do segmento conforme B3."
+      - name: tx_cnpj
+        description: "CNPJ original como presente no seed."
+      - name: vl_cnpj
+        description: "CNPJ numérico original como presente no seed."
+      - name: cnpj
+        description: "Cadastro Nacional de Pessoa Jurídica (apenas números), chave única da empresa."
+        tests: [not_null]
+
+  - name: sv_df_empresas
+    description: "Cadastro de empresas com CNPJ padronizado e tipagem normalizada."
+    columns:
+      - name: cnpj
+        description: "Cadastro Nacional de Pessoa Jurídica (apenas números), chave única da empresa."
+        tests: [not_null, unique]
+      - name: dt_abertura
+        description: "Data de abertura convertida para DATE."
+      - name: cd_cnae_principal
+        description: "Código CNAE principal."
+      - name: de_cnae_principal
+        description: "Descrição do CNAE principal."
+      - name: de_ramo_atividade
+        description: "Descrição do ramo principal de atividade econômica."
+      - name: de_setor
+        description: "Classificação setorial da empresa no mercado."
+      - name: endereco_cep
+        description: "CEP do endereço cadastrado."
+      - name: endereco_municipio
+        description: "Município do endereço."
+      - name: endereco_uf
+        description: "Estado UF do endereço."
+      - name: endereco_regiao
+        description: "Região geográfica."
+      - name: endereco_mesorregiao
+        description: "Mesorregião."
+      - name: situacao_cadastral
+        description: "Situação cadastral atual."
+
+  - name: sv_empresas_nivel_atividade
+    description: "Nível de atividade cadastral da empresa com CNPJ padronizado."
+    columns:
+      - name: cnpj
+        description: "CNPJ padronizado com 14 dígitos."
+        tests: [not_null]
+      - name: nivel_atividade
+        description: "Nível de atividade cadastral."
+
+  - name: sv_empresas_porte
+    description: "Porte da empresa com CNPJ padronizado."
+    columns:
+      - name: cnpj
+        description: "CNPJ padronizado com 14 dígitos."
+        tests: [not_null]
+      - name: empresa_porte
+        description: "Porte da empresa."
+
+  - name: sv_empresas_saude_tributaria
+    description: "Indicador de saúde tributária da empresa com CNPJ padronizado."
+    columns:
+      - name: cnpj
+        description: "CNPJ padronizado com 14 dígitos."
+        tests: [not_null]
+      - name: saude_tributaria
+        description: "Indicador de saúde tributária."
+
+  - name: sv_empresas_simples
+    description: "Indicadores do Simples e SIMEI com CNPJ padronizado."
+    columns:
+      - name: cnpj
+        description: "CNPJ padronizado com 14 dígitos."
+        tests: [not_null]
+      - name: optante_simples
+        description: "Indicador de opção pelo Simples."
+      - name: optante_simei
+        description: "Indicador de opção pelo SIMEI."

@@ -1,0 +1,200 @@
+version: 2
+
+models:
+  - name: dim_empresa
+    description: "Cadastro consolidado das empresas listadas, contendo dados de identificação, setor e situação cadastral."
+    columns:
+      - name: cnpj
+        description: "Cadastro Nacional de Pessoa Jurídica (apenas números), chave única da empresa."
+        tests: [unique, not_null]
+      - name: cd_acao_rdz
+        description: "Código reduzido do papel associado à empresa."
+      - name: cd_acao
+        description: "Código completo do papel negociado."
+      - name: nm_empresa
+        description: "Nome da empresa conforme registro na B3."
+      - name: setor_economico
+        description: "Setor econômico da empresa segundo classificação da B3."
+      - name: subsetor
+        description: "Subsetor da empresa na classificação da B3."
+      - name: segmento
+        description: "Segmento econômico da empresa."
+      - name: segmento_b3
+        description: "Segmento especial da B3 ao qual a empresa pertence."
+      - name: nm_segmento_b3
+        description: "Nome descritivo do segmento especial da B3."
+      - name: tx_cnpj
+        description: "CNPJ no formato text original do seed."
+      - name: vl_cnpj
+        description: "CNPJ numérico derivado do seed."
+      - name: dt_abertura
+        description: "Data de abertura da empresa conforme dados oficiais."
+      - name: cd_cnae_principal
+        description: "Código CNAE principal da atividade econômica."
+      - name: de_cnae_principal
+        description: "Descrição do CNAE principal."
+      - name: de_ramo_atividade
+        description: "Descrição do ramo de atividade econômica da empresa."
+      - name: de_setor
+        description: "Classificação do setor econômico (dataset complementar)."
+      - name: endereco_cep
+        description: "CEP cadastrado da empresa."
+      - name: endereco_municipio
+        description: "Município de localização da empresa."
+      - name: endereco_uf
+        description: "Unidade federativa (UF) da empresa."
+      - name: endereco_regiao
+        description: "Região geográfica da empresa."
+      - name: endereco_mesorregiao
+        description: "Mesorregião geográfica associada à empresa."
+      - name: situacao_cadastral
+        description: "Situação cadastral da empresa no órgão regulador."
+      - name: nivel_atividade
+        description: "Classificação do nível de atividade operacional."
+      - name: empresa_porte
+        description: "Porte da empresa (ME, EPP, Médio, Grande)."
+      - name: saude_tributaria
+        description: "Indicador de saúde fiscal e tributária da empresa."
+      - name: optante_simples
+        description: "Indica se a empresa é optante do Simples Nacional."
+      - name: optante_simei
+        description: "Indica se a empresa é optante SIMEI."
+
+  - name: fact_cotacao
+    description: "Histórico diário de negociações contendo preços, volume e informações básicas do pregão."
+    columns:
+      - name: dt_pregao
+        description: "Data da sessão de negociação."
+        tests: [not_null]
+      - name: cd_acao_rdz
+        description: "Código de negociação principal do ativo."
+        tests: [not_null]
+      - name: cd_acao
+        description: "Código secundário de identificação do papel."
+      - name: cd_isin
+        description: "Código ISIN do ativo."
+      - name: nm_empresa_rdz
+        description: "Nome reduzido da empresa no arquivo de cotações."
+      - name: cd_bdi
+        description: "Código BDI indicando tipo de oferta e situação do papel."
+      - name: tp_merc
+        description: "Tipo de mercado onde o ativo foi negociado."
+      - name: especi
+        description: "Especificação do papel."
+      - name: vl_abertura
+        description: "Preço de abertura do pregão."
+      - name: vl_maximo
+        description: "Maior preço negociado no pregão."
+      - name: vl_minimo
+        description: "Menor preço negociado no pregão."
+      - name: vl_medio
+        description: "Preço médio ponderado do pregão."
+      - name: vl_fechamento
+        description: "Preço de fechamento."
+      - name: vl_volume
+        description: "Volume financeiro negociado."
+      - name: vl_ttl_neg
+        description: "Quantidade de negócios realizados."
+      - name: qt_tit_neg
+        description: "Quantidade de títulos negociados."
+      - name: vl_mlh_oft_compra
+        description: "Melhor oferta de compra do pregão."
+      - name: vl_mlh_oft_venda
+        description: "Melhor oferta de venda do pregão."
+      - name: in_opc
+        description: "Indicador de opção."
+      - name: dt_vnct_opc
+        description: "Data de vencimento da opção."
+      - name: vl_exec_opc
+        description: "Preço de exercício da opção."
+      - name: ft_cotacao
+        description: "Fator de cotação."
+      - name: vl_exec_moeda_corrente
+        description: "Preço de exercício convertido para moeda corrente."
+      - name: cnpj
+        description: "CNPJ da empresa emissora do papel."
+        tests:
+          - relationships:
+              to: ref('dim_empresa')
+              field: cnpj
+              config:
+                severity: warn
+
+  - name: dim_calendario
+    description: "Tabela auxiliar de datas para apoio em análises temporais e cruzamentos."
+    columns:
+      - name: dt_calendario
+        description: "Data de referência do calendário."
+        tests: [unique, not_null]
+      - name: ano
+        description: "Ano numérico da data."
+      - name: mes
+        description: "Mês numérico da data."
+      - name: dia
+        description: "Dia do mês."
+      - name: dia_semana_num
+        description: "Número do dia da semana. 0 domingo até 6 sábado."
+      - name: dia_semana_nome
+        description: "Nome do dia da semana."
+      - name: semana_ano
+        description: "Semana do ano conforme calendário."
+      - name: primeiro_dia_mes
+        description: "Primeiro dia do mês correspondente."
+      - name: fim_semana
+        description: "Indica se a data é sábado ou domingo."
+
+  - name: vw_cotacao
+    description: "Visão analítica pronta para consumo, unificando métricas de cotação com atributos das empresas e datas."
+    columns:
+      - name: dt_pregao
+        description: "Data do pregão."
+      - name: cd_acao
+        description: "Código do papel na B3."
+      - name: cd_isin
+        description: "Código ISIN do papel."
+      - name: preco_abertura
+        description: "Preço de abertura do dia."
+      - name: preco_maximo
+        description: "Preço máximo do dia."
+      - name: preco_minimo
+        description: "Preço mínimo do dia."
+      - name: preco_medio
+        description: "Preço médio ponderado do dia."
+      - name: preco_fechamento
+        description: "Preço de fechamento do dia."
+      - name: volume_financeiro
+        description: "Volume financeiro negociado no dia em reais."
+      - name: negocios
+        description: "Número de negócios executados no dia."
+      - name: quantidade_negociada
+        description: "Quantidade de títulos negociados no dia."
+      - name: cnpj
+        description: "CNPJ da companhia emissora, usado como chave de junção."
+      - name: ano
+        description: "Ano do calendário."
+      - name: mes
+        description: "Mês do calendário."
+      - name: semana_ano
+        description: "Número da semana no ano."
+      - name: dia_semana
+        description: "Nome do dia da semana."
+      - name: empresa
+        description: "Nome da empresa."
+      - name: segmento_b3
+        description: "Segmento segundo a taxonomia da B3."
+      - name: nm_segmento_b3
+        description: "Descrição legível do segmento da B3."
+      - name: empresa_porte
+        description: "Porte da empresa."
+      - name: nivel_atividade
+        description: "Nível de atividade da empresa."
+      - name: saude_tributaria
+        description: "Indicador de saúde tributária."
+      - name: optante_simples
+        description: "Indicador se a empresa é optante do Simples."
+      - name: optante_simei
+        description: "Indicador se a empresa é optante do SIMEI."
+      - name: uf
+        description: "Unidade da Federação da sede."
+      - name: regiao
+        description: "Região geográfica da sede."

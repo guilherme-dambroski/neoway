@@ -1,0 +1,96 @@
+version: 2
+
+seeds:
+
+  - name: cotacoes_bolsa
+    config:
+      column_types:
+        id: varchar
+        tp_reg: varchar
+        dt_pregao: varchar
+        cd_bdi: varchar
+        cd_acao: varchar
+        tp_merc: varchar
+        nm_empresa_rdz: varchar
+        especi: varchar
+        prazot: varchar
+        moeda_ref: varchar
+        vl_abertura: varchar
+        vl_maximo: varchar
+        vl_minimo: varchar
+        vl_medio: varchar
+        vl_fechamento: varchar
+        vl_mlh_oft_compra: varchar
+        vl_mlh_oft_venda: varchar
+        vl_ttl_neg: varchar
+        qt_tit_neg: varchar
+        vl_volume: varchar
+        vl_exec_opc: varchar
+        in_opc: varchar
+        dt_vnct_opc: varchar
+        ft_cotacao: varchar
+        vl_exec_moeda_corrente: varchar
+        cd_isin: varchar
+        cd_acao_rdz: varchar
+        created_at: varchar
+        updated_at: varchar
+        __index_level_0__: varchar
+
+  - name: df_empresas
+    config:
+      column_types:
+        cnpj: varchar
+        dt_abertura: varchar
+        matriz_empresaMatriz: varchar
+        cd_cnae_principal: varchar
+        de_cnae_principal: varchar
+        de_ramo_atividade: varchar
+        de_setor: varchar
+        endereco_cep: varchar
+        endereco_municipio: varchar
+        endereco_uf: varchar
+        endereco_regiao: varchar
+        endereco_mesorregiao: varchar
+        situacao_cadastral: varchar
+
+  - name: empresas_bolsa
+    config:
+      column_types:
+        id: varchar
+        cd_acao_rdz: varchar
+        nm_empresa: varchar
+        setor_economico: varchar
+        subsetor: varchar
+        segmento: varchar
+        segmento_b3: varchar
+        nm_segmento_b3: varchar
+        cd_acao: varchar
+        tx_cnpj: varchar
+        vl_cnpj: varchar
+        created_at: varchar
+        updated_at: varchar
+
+  - name: empresas_nivel_atividade
+    config:
+      column_types:
+        cnpj: varchar
+        nivel_atividade: varchar
+
+  - name: empresas_porte
+    config:
+      column_types:
+        cnpj: varchar
+        empresa_porte: varchar
+
+  - name: empresas_saude_tributaria
+    config:
+      column_types:
+        cnpj: varchar
+        saude_tributaria: varchar
+
+  - name: empresas_simples
+    config:
+      column_types:
+        cnpj: varchar
+        optante_simples: varchar
+        optante_simei: varchar
