@@ -31,6 +31,19 @@ clean-targets:         # directories to be removed by `dbt clean`
 # files using the `{{ config(...) }}` macro.
 models:
   neoway_dbt:
-    # Config indicated by + and applies to all files under models/example/
-    example:
+    # +schema: main #default
+    bronze:
+      +materialized: table
+      +schema: bronze
+    silver:
+      +materialized: table
+      +schema: silver
+    gold:
       +materialized: view
+      +schema: gold
+
+seeds:
+  neoway_dbt:
+    +delimiter: ";"
+    +quote_columns: false
+    +schema: seed          # seeds vão para schema "seed"
